@@ -1,4 +1,5 @@
 {
+  "Name": "CachingImageSourceExample",
   "RootNamespace":"",
   "Packages": [
         "Fuse.Animations",
