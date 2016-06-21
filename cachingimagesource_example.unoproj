@@ -2,17 +2,10 @@
   "Name": "CachingImageSourceExample",
   "RootNamespace":"",
   "Packages": [
-        "Experimental.Http",
-        "Experimental.TextureLoader",
-        "Fuse.BasicTheme",
-        "Fuse.Designer",
-        "Fuse.Drawing",
-        "Fuse.Elements",
-        "Fuse.Reactive",
-        "Fuse.Android",
-        "Fuse.Desktop",
-        "Fuse.iOS",
-        "FuseCore"
+    "Fuse",
+    "FuseJS",
+    "Experimental.Http",
+    "Experimental.TextureLoader"
   ],
   "Includes": [
     "*"
