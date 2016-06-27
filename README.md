@@ -1,4 +1,4 @@
-Fuse caching imagesource [![Build Status](https://travis-ci.org/bolav/fuse-cachingimagesource.svg?branch=master)](https://travis-ci.org/bolav/fuse-cachingimagesource)
+Fuse caching imagesource [![Build Status](https://travis-ci.org/bolav/fuse-cachingimagesource.svg?branch=master)](https://travis-ci.org/bolav/fuse-cachingimagesource) ![Fuse Version](https://fuse-version.herokuapp.com/?repo=https://github.com/bolav/fuse-cachingimagesource)
 ========================
 
 A naive caching imagesource, with missing memory management.
