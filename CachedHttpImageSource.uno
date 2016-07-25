@@ -25,7 +25,13 @@ using Experimental.Http;
 			}
 			set { 
 				// debug_log "CachedHttpImageSource setting url " + value;
-				_url = value;
+				if (String.IsNullOrEmpty(_url)){
+				    _url = "http://i.imgur.com/fLoufZ6.png"; //_url is null or empty set img
+				}
+				else{
+				    _url = value;
+				}
+				
 				_filename = Path.Combine(Directory.GetUserDirectory(UserDirectory.Data), Url.GetHashCode() + ".jpg");
 				if (File.Exists(_filename)) {
 					// debug_log "Load file! " + _filename;
