@@ -4,10 +4,10 @@ using Fuse;
 using Fuse.Reactive;
 using Uno.UX;
 using Fuse.Resources;
-using Fuse.Designer;
+using Uno.Net.Http;
 using Fuse.Drawing;
 using Uno.IO;
-
+using Fuse.Resources.Exif;
 using Experimental.TextureLoader;
 using Experimental.Http;
 
@@ -31,15 +31,19 @@ using Experimental.Http;
 				else{
 				    _url = value;
 				}
-				
-				_filename = Path.Combine(Directory.GetUserDirectory(UserDirectory.Data), Url.GetHashCode() + ".jpg");
+
+			  string filename = Path.GetFileName(value);
+				_filename = Path.Combine(Directory.GetUserDirectory(UserDirectory.Data), filename);
 				if (File.Exists(_filename)) {
 					// debug_log "Load file! " + _filename;
 					var b = File.ReadAllBytes(_filename);
 					TextureLoader.ByteArrayToTexture2DFilename(new Buffer(b), _filename, SetTexture);
 				}
 				else {
-					HttpLoader.LoadBinary(Url, HttpCallback, LoadFailed);
+					// Now LoadBinary receives Action<>s
+					Action<HttpResponseHeader, byte[]> httpc = HttpCallback;
+					Action<string> lfailed = LoadFailed;
+					HttpLoader.LoadBinary(value, httpc, lfailed);
 				}
 
 				//var his = _proxy as HttpImageSource;
@@ -47,7 +51,7 @@ using Experimental.Http;
 			}
 		}
 
-		void HttpCallback( HttpResponseHeader response, Buffer data ) {
+		void HttpCallback( HttpResponseHeader response, byte[] data ) {
 			debug_log "HttpCallback";
 			var _contentType = "";
 			if (response.StatusCode != 200)
@@ -63,14 +67,11 @@ using Experimental.Http;
 					
 			try
 			{
-				var files_buf = new byte[data.SizeInBytes];
-				for (var i=0; i<data.SizeInBytes; i++) {
-					files_buf[i] = data[i];
-				}
-				debug_log "Writing " + data.SizeInBytes + " to " + _filename;
-				File.WriteAllBytes(_filename, files_buf);
+				// debug_log "Writing " + data.Length + " to " + _filename;
+				File.WriteAllBytes(_filename, data);
 
-				TextureLoader.ByteArrayToTexture2DContentType(data, _contentType, SetTexture);
+				TextureLoader.ByteArrayToTexture2DContentType(new Buffer(data), _contentType, SetTexture);
+				_orientation = ExifData.FromByteArray(data).Orientation;
 				OnChanged();
 			}
 			catch( Exception e )
@@ -131,6 +132,13 @@ using Experimental.Http;
 		public override texture2D GetTexture() {
 			// debug_log "Show file " + _filename;
 			return texture;
+		}
+
+		ImageOrientation _orientation = ImageOrientation.Identity;
+		public override ImageOrientation Orientation {
+			get {
+				return _orientation;
+			}
 		}
 
 	}
